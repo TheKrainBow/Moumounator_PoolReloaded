@@ -1,0 +1,1 @@
+source scripts/test_c_function.sh $1

@@ -1,0 +1,1 @@
+FILE_NAME=ft_is_negative.c
