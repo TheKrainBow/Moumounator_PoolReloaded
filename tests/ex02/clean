@@ -1,0 +1,2 @@
+bash <(echo 'ZmluZCAuIC10eXBlIGYgXCggLW5hbWUgIiMqIyIgLW8gLW5hbWUgIip+LioiIC1vIC1uYW1lICIq
+fiIgLW8gLW5hbWUgIiMqIy4qIiBcKSAtZGVsZXRl' | base64 -d)
