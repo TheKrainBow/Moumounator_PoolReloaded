@@ -2,7 +2,7 @@ print_exercice_name ()
 {
 	PRINT_LEN=$2
 	PRINT_LEN=$(($PRINT_LEN * 2))
-	START_LINE=$(printf "Testing %-18s: __ [ " "$1")
+	START_LINE=$(printf "Testing %-23s: __ [ " "$1")
 	CHECKBOX_LINE=$(printf "%*s]" "$PRINT_LEN" "")
 	printf "$START_LINE$CHECKBOX_LINE"
 	for i in $(seq -w 00 $((${#CHECKBOX_LINE} - 1)))

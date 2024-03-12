@@ -5,7 +5,7 @@ source scripts/print.sh
 
 if ! test -f "tests/ex$DAY_NUMBER/info.sh"; then
 	printf "No tests for ex$DAY_NUMBER\n"
-	exit
+	return
 fi
 
 if ! test -d "outputs/ex$DAY_NUMBER/"; then
@@ -25,7 +25,7 @@ do
 	if ! test -d $OUTPUT_PATH; then
 		mkdir $OUTPUT_PATH
 	fi
-	cc -Wall -Wextra -Werror ./tests/ex$DAY_NUMBER/*.o ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c -o $OUTPUT_PATH/answer.ex$DAY_NUMBER.test${TEST_NUMBER}.out 2> /dev/null
+	cc -Wall -Wextra -Werror -fsanitize=address -g ./tests/ex$DAY_NUMBER/*.o ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c -lm -o $OUTPUT_PATH/answer.ex$DAY_NUMBER.test${TEST_NUMBER}.out
 	if [ $? -ne 0 ]; then
 		continue
 	fi
@@ -34,6 +34,7 @@ do
 		printf "\033[31;1;1m✗ \033[0m"
 		rm ./$OUTPUT_PATH/answer.ex$DAY_NUMBER.test${TEST_NUMBER}.out
 		cp ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c $OUTPUT_PATH/main.c
+		NUMBER_OF_TESTS=$(($NUMBER_OF_TESTS + 1))
 		continue
 	else
 		rm $OUTPUT_PATH/user.compilation_error.out
@@ -42,11 +43,10 @@ do
 	timeout 3 ./$OUTPUT_PATH/user.ex$DAY_NUMBER.test${TEST_NUMBER}.out > $OUTPUT_PATH/user.txt 2> $OUTPUT_PATH/user_errors.txt
 	if [ $? -eq 124 ]; then
 		printf "Timed out after 3 secondes!" > $OUTPUT_PATH/user_errors.txt
-		rm $OUTPUT_PATH/user.txt
 	fi
 	rm ./$OUTPUT_PATH/answer.ex$DAY_NUMBER.test${TEST_NUMBER}.out ./$OUTPUT_PATH/user.ex$DAY_NUMBER.test${TEST_NUMBER}.out
 	diff $OUTPUT_PATH/answer.txt $OUTPUT_PATH/user.txt > /dev/null
-	if [ $? -ne 0 ]; then
+	if [ $? -eq 1 ] || [ -s "$OUTPUT_PATH/user_errors.txt" ]; then
 		printf "\033[31;1;1m✗ \033[0m"
 		cp ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c $OUTPUT_PATH/main.c
 	else
@@ -60,10 +60,8 @@ do
 done
 if [ $NUMBER_OF_SUCCESS == $NUMBER_OF_TESTS ]; then
 	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]} 1
-	#printf "\033[32;1;1m OK\033[0m\n"
 else
 	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]} 0
-	#printf "\033[31;1;1m KO\033[0m\n"
 fi
 
 if [ -z "$(ls -A outputs/ex$DAY_NUMBER/)" ]; then
