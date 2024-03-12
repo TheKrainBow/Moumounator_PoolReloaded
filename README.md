@@ -15,7 +15,7 @@ git clone https://github.com/TheKrainBow/Moumounator_PoolReloaded/
 
 To test all exercices
 ```bash
-./bash start_test.sh
+bash start_test.sh
 ```
 
 To test a specific exercice
