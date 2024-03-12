@@ -9,12 +9,13 @@ TOTAL_TESTS=0
 
 if [ -z "$1" ]; then
 	echo "No exercice number specified. Starting all tests:"
-	for DAY_NUMBER in $(find tests/ -mindepth 1 -type d | sed "s/.*\/ex//")
+	for DAY_NUMBER in $(find tests/ -mindepth 1 -maxdepth 1 -type d | sed "s/.*\/ex//" | sort)
 	do
 		source scripts/start_day.sh $DAY_NUMBER
 	done
 else
-	source scripts/start_day.sh $(printf '%02d\n' $(echo $1 | sed "s/ex//"))
+	INPUT=$(echo $1 | sed "s/ex//")
+	source scripts/start_day.sh $(printf '%02d\n' $((10#$INPUT)))
 fi
 
 if [ $TOTAL_SUCCESS == $TOTAL_TESTS ]; then
