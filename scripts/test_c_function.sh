@@ -1,4 +1,3 @@
-RM_ON_SUCCESS=1
 DAY_NUMBER=$1
 
 source scripts/print.sh
@@ -11,9 +10,10 @@ fi
 if ! test -d "outputs/ex$DAY_NUMBER/"; then
 	mkdir "outputs/ex$DAY_NUMBER/"
 fi
-FILE_NAME=$(find tests/ex26 -type f -name "*.o" | sed "s/.*\///" | sed "s/\.o/.c/")
-EXERCICE_TITLE=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.o" | sed "s/.*\///" | sed "s/\.o//")
-TEST_LIST=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | sort)
+
+FILE_NAME=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -maxdepth 1 -type f -name "*.o" | sed "s/.*\///" | sed "s/\.o/.c/")
+EXERCICE_TITLE=$(echo $FILE_NAME | sed "s/\.c//")
+TEST_LIST=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -maxdepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | sort)
 print_exercice_name $EXERCICE_TITLE $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]}
 
 NUMBER_OF_SUCCESS=0
@@ -29,7 +29,7 @@ do
 	if [ $? -ne 0 ]; then
 		continue
 	fi
-	cc -Wall -Wextra -Werror -fsanitize=address -g ../cloned_pool/ex$DAY_NUMBER/$FILE_NAME ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c -o $OUTPUT_PATH/user.ex$DAY_NUMBER.test${TEST_NUMBER}.out 2> $OUTPUT_PATH/user.compilation_error.out
+	cc -Wall -Wextra -Werror -fsanitize=address -g $PATH_TO_POOL/ex$DAY_NUMBER/$FILE_NAME ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c -o $OUTPUT_PATH/user.ex$DAY_NUMBER.test${TEST_NUMBER}.out 2> $OUTPUT_PATH/user.compilation_error.out
 	if [ $? -ne 0 ]; then
 		printf "\033[31;1;1m✗ \033[0m"
 		rm ./$OUTPUT_PATH/answer.ex$DAY_NUMBER.test${TEST_NUMBER}.out
@@ -59,9 +59,9 @@ do
 	NUMBER_OF_TESTS=$(($NUMBER_OF_TESTS + 1))
 done
 if [ $NUMBER_OF_SUCCESS == $NUMBER_OF_TESTS ]; then
-	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]} 1
+	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l)
 else
-	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]} 0
+	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l)
 fi
 
 if [ -z "$(ls -A outputs/ex$DAY_NUMBER/)" ]; then

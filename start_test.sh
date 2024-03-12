@@ -1,5 +1,4 @@
-
-RM_ON_SUCCESS=1
+source settings.sh
 
 if [ -n "$(ls -A outputs/)" ]; then
 	rm -rf outputs/*
