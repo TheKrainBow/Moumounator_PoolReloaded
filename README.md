@@ -20,9 +20,9 @@ To test all exercices
 
 To test a specific exercice
 ```bash
-./bash start_test.sh ex05
+bash start_test.sh ex05
 or
-./bash start_test.sh 5
+bash start_test.sh 5
 ```
 
 ## Contributing
