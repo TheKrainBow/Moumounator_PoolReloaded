@@ -3,7 +3,7 @@ DAY_NUMBER=$1
 
 source scripts/print.sh
 
-if ! test -f "tests/ex$DAY_NUMBER/info.sh"; then
+if ! test -d "tests/ex$DAY_NUMBER"; then
 	printf "No tests for ex$DAY_NUMBER\n"
 	return
 fi
@@ -11,7 +11,7 @@ fi
 if ! test -d "outputs/ex$DAY_NUMBER/"; then
 	mkdir "outputs/ex$DAY_NUMBER/"
 fi
-source tests/ex$DAY_NUMBER/info.sh
+FILE_NAME=$(find tests/ex26 -type f -name "*.o" | sed "s/.*\///" | sed "s/\.o/.c/")
 EXERCICE_TITLE=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.o" | sed "s/.*\///" | sed "s/\.o//")
 TEST_LIST=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | sort)
 print_exercice_name $EXERCICE_TITLE $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]}

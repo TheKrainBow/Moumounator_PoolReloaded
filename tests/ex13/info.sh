@@ -1,1 +1,0 @@
-FILE_NAME=ft_recursive_factorial.c

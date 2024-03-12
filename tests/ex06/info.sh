@@ -1,1 +1,0 @@
-FILE_NAME=ft_print_alphabet.c
