@@ -25,6 +25,7 @@ or
 bash start_test.sh 5
 ```
 
+![](https://github.com/TheKrainBow/Moumounator_PoolReloaded/images/exemple.gif)
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
