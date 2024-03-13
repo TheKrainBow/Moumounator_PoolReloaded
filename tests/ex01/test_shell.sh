@@ -1,19 +1,20 @@
 DAY_NUMBER=$1
 NUMBER_OF_TESTS=1
+NUMBER_OF_SUCCESS=0
 
 OUTPUT_PATH="outputs/ex$1"
 
 source scripts/print.sh
 
-print_exercice_name $1 MAC.sh 1
+print_exercice_name $1 Z 1
 
 if test -d "$OUTPUT_PATH"; then
 	rm $OUTPUT_PATH
 fi
 mkdir "$OUTPUT_PATH"
 
-source tests/ex$1/MAC.sh > $OUTPUT_PATH/answer.txt
-source $PATH_TO_POOL/ex$1/MAC.sh > $OUTPUT_PATH/user.txt 2> $OUTPUT_PATH/user_errors.txt
+printf "Z\n" > $OUTPUT_PATH/answer.txt
+cat $PATH_TO_POOL/ex$1/z > $OUTPUT_PATH/user.txt 2> $OUTPUT_PATH/user_errors.txt
 diff $OUTPUT_PATH/answer.txt $OUTPUT_PATH/user.txt > /dev/null
 if [ $? -eq 1 ] || [ -s "user_errors.txt" ]; then
 	printf "\033[31;1;1m✗ \033[0m"

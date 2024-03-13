@@ -14,7 +14,7 @@ fi
 FILE_NAME=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -maxdepth 1 -type f -name "*.o" | sed "s/.*\///" | sed "s/\.o/.c/")
 EXERCICE_TITLE=$(echo $FILE_NAME | sed "s/\.c//")
 TEST_LIST=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -maxdepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | sort)
-print_exercice_name $EXERCICE_TITLE $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]}
+print_exercice_name $DAY_NUMBER $EXERCICE_TITLE $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]}
 
 NUMBER_OF_SUCCESS=0
 NUMBER_OF_TESTS=0

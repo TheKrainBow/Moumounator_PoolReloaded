@@ -1,8 +1,8 @@
 print_exercice_name ()
 {
-	PRINT_LEN=$2
+	PRINT_LEN=$3
 	PRINT_LEN=$(($PRINT_LEN * 2))
-	START_LINE=$(printf "Testing %-23s: __ [ " "$1")
+	START_LINE=$(printf "Testing ex$1 %-23s: __ [ " "$2")
 	CHECKBOX_LINE=$(printf "%*s]" "$PRINT_LEN" "")
 	printf "$START_LINE$CHECKBOX_LINE"
 	for i in $(seq -w 00 $((${#CHECKBOX_LINE} - 1)))

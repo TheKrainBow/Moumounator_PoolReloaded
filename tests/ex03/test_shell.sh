@@ -1,11 +1,11 @@
 DAY_NUMBER=$1
 NUMBER_OF_TESTS=1
 
-OUTPUT_PATH="outputs/ex03"
+OUTPUT_PATH="outputs/ex$1"
 
 source scripts/print.sh
 
-print_exercice_name find_sh.sh 1
+print_exercice_name $1 find_sh.sh 1
 
 if test -d "$OUTPUT_PATH"; then
 	rm $OUTPUT_PATH
@@ -24,9 +24,9 @@ for path in "${OUTPUT_PATH}/user" "${OUTPUT_PATH}/answer"; do
 done
 
 cd ${OUTPUT_PATH}/answer
-source ../../../tests/ex03/find_sh.sh > ../answer.txt
+source ../../../tests/ex$1/find_sh.sh > ../answer.txt
 cd ../user
-source ../../../$PATH_TO_POOL/ex03/find_sh.sh > ../user.txt 2> ../user_errors.txt
+source ../../../$PATH_TO_POOL/ex$1/find_sh.sh > ../user.txt 2> ../user_errors.txt
 cd ../
 diff answer.txt user.txt > /dev/null
 if [ $? -eq 1 ] || [ -s "user_errors.txt" ]; then
