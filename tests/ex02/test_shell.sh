@@ -9,7 +9,7 @@ source scripts/print.sh
 print_exercice_name $1 clean.sh 1
 
 if test -d "$OUTPUT_PATH"; then
-	rm $OUTPUT_PATH
+	rm -rf "$OUTPUT_PATH"
 fi
 mkdir "$OUTPUT_PATH"
 
@@ -28,15 +28,14 @@ cd ${OUTPUT_PATH}/answer
 source ../../../tests/ex$1/clean
 find . > ../answer.txt
 cd ../user
-source ../../../$PATH_TO_POOL/ex$1/clean 2> ../user_errors.txt
+source ../../../$PATH_TO_POOL/ex$1/clean > ../user_stdout.txt 2> ../user_errors.txt
 find . > ../user.txt
-cd ../
-diff answer.txt user.txt > /dev/null
-if [ $? -eq 1 ] || [ -s "user_errors.txt" ]; then
+cd ../../..
+diff $OUTPUT_PATH/answer.txt $OUTPUT_PATH/user.txt > /dev/null
+if [ $? -eq 1 ] || [ -s "$OUTPUT_PATH/user_errors.txt" ]; then
 	printf "\033[31;1;1m✗ \033[0m"
 else
 	printf "\033[32;1;1m✓ \033[0m"
-	cd ../..
 	NUMBER_OF_SUCCESS=1
 	if [ $RM_ON_SUCCESS -ne 0 ]; then
 		rm -r $OUTPUT_PATH

@@ -1,6 +1,7 @@
 DAY_NUMBER=$1
 
 source scripts/print.sh
+source scripts/allowed.sh
 
 if ! test -d "tests/ex$DAY_NUMBER"; then
 	printf "No tests for ex$DAY_NUMBER\n"
@@ -14,10 +15,25 @@ fi
 FILE_NAME=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -maxdepth 1 -type f -name "*.o" | sed "s/.*\///" | sed "s/\.o/.c/")
 EXERCICE_TITLE=$(echo $FILE_NAME | sed "s/\.c//")
 TEST_LIST=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -maxdepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | sort)
-print_exercice_name $DAY_NUMBER $EXERCICE_TITLE $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l) ${#TEST_LIST[@]}
+NUMBER_OF_CHECKS=$(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l)
+if test -f tests/ex$DAY_NUMBER/allowed_functions; then
+	NUMBER_OF_CHECKS=$(($NUMBER_OF_CHECKS + 1))
+fi
+print_exercice_name $DAY_NUMBER $EXERCICE_TITLE $NUMBER_OF_CHECKS
 
 NUMBER_OF_SUCCESS=0
 NUMBER_OF_TESTS=0
+
+if test -f tests/ex$DAY_NUMBER/allowed_functions; then
+	NUMBER_OF_TESTS=1
+	if check_allowed_functions $PATH_TO_POOL/ex$DAY_NUMBER/$FILE_NAME $(cat tests/ex$DAY_NUMBER/allowed_functions) > outputs/ex$DAY_NUMBER/allowed_functions.txt; then
+		printf "\033[32;1;1m✓ \033[0m"
+		NUMBER_OF_SUCCESS=1
+		rm outputs/ex$DAY_NUMBER/allowed_functions.txt
+	else
+		printf "\033[31;1;1m✗ \033[0m"
+	fi
+fi
 
 for TEST_NUMBER in $TEST_LIST
 do
@@ -29,7 +45,7 @@ do
 	if [ $? -ne 0 ]; then
 		continue
 	fi
-	cc -Wall -Wextra -Werror -fsanitize=address -g $PATH_TO_POOL/ex$DAY_NUMBER/$FILE_NAME ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c -o $OUTPUT_PATH/user.ex$DAY_NUMBER.test${TEST_NUMBER}.out 2> $OUTPUT_PATH/user.compilation_error.out
+	cc -Wall -Wextra -Werror -fsanitize=address -g $PATH_TO_POOL/ex$DAY_NUMBER/$FILE_NAME ./scripts/ft_putchar.c ./tests/ex$DAY_NUMBER/test${TEST_NUMBER}_*.c -o $OUTPUT_PATH/user.ex$DAY_NUMBER.test${TEST_NUMBER}.out 2> $OUTPUT_PATH/user.compilation_error.out
 	if [ $? -ne 0 ]; then
 		printf "\033[31;1;1m✗ \033[0m"
 		rm ./$OUTPUT_PATH/answer.ex$DAY_NUMBER.test${TEST_NUMBER}.out
@@ -58,11 +74,7 @@ do
 	fi
 	NUMBER_OF_TESTS=$(($NUMBER_OF_TESTS + 1))
 done
-if [ $NUMBER_OF_SUCCESS == $NUMBER_OF_TESTS ]; then
-	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l)
-else
-	print_result $(find tests/ex$DAY_NUMBER/ -mindepth 1 -type f -name "*.c" | sed "s/.*\/test//" | sed "s/_.*//" | wc -l)
-fi
+print_result $NUMBER_OF_CHECKS
 
 if [ -z "$(ls -A outputs/ex$DAY_NUMBER/)" ]; then
 	rm -rf outputs/ex$DAY_NUMBER/

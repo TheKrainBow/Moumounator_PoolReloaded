@@ -1,5 +1,6 @@
 DAY_NUMBER=$1
 NUMBER_OF_TESTS=1
+NUMBER_OF_SUCCESS=0
 
 OUTPUT_PATH="outputs/ex$1"
 
@@ -8,7 +9,7 @@ source scripts/print.sh
 print_exercice_name $1 find_sh.sh 1
 
 if test -d "$OUTPUT_PATH"; then
-	rm $OUTPUT_PATH
+	rm -rf "$OUTPUT_PATH"
 fi
 mkdir "$OUTPUT_PATH"
 
@@ -27,13 +28,13 @@ cd ${OUTPUT_PATH}/answer
 source ../../../tests/ex$1/find_sh.sh > ../answer.txt
 cd ../user
 source ../../../$PATH_TO_POOL/ex$1/find_sh.sh > ../user.txt 2> ../user_errors.txt
-cd ../
-diff answer.txt user.txt > /dev/null
-if [ $? -eq 1 ] || [ -s "user_errors.txt" ]; then
+cd ../../..
+sed "s/^\$/.sh/" $OUTPUT_PATH/answer.txt > $OUTPUT_PATH/answer_basename.txt
+diff $OUTPUT_PATH/answer.txt $OUTPUT_PATH/user.txt > /dev/null || diff $OUTPUT_PATH/answer_basename.txt $OUTPUT_PATH/user.txt > /dev/null
+if [ $? -ne 0 ] || [ -s "$OUTPUT_PATH/user_errors.txt" ]; then
 	printf "\033[31;1;1m✗ \033[0m"
 else
 	printf "\033[32;1;1m✓ \033[0m"
-	cd ../..
 	NUMBER_OF_SUCCESS=1
 	if [ $RM_ON_SUCCESS -ne 0 ]; then
 		rm -r $OUTPUT_PATH

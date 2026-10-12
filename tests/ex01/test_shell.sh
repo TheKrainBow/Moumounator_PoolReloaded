@@ -9,14 +9,14 @@ source scripts/print.sh
 print_exercice_name $1 Z 1
 
 if test -d "$OUTPUT_PATH"; then
-	rm $OUTPUT_PATH
+	rm -rf "$OUTPUT_PATH"
 fi
 mkdir "$OUTPUT_PATH"
 
 printf "Z\n" > $OUTPUT_PATH/answer.txt
 cat $PATH_TO_POOL/ex$1/z > $OUTPUT_PATH/user.txt 2> $OUTPUT_PATH/user_errors.txt
 diff $OUTPUT_PATH/answer.txt $OUTPUT_PATH/user.txt > /dev/null
-if [ $? -eq 1 ] || [ -s "user_errors.txt" ]; then
+if [ $? -eq 1 ] || [ -s "$OUTPUT_PATH/user_errors.txt" ]; then
 	printf "\033[31;1;1m✗ \033[0m"
 else
 	printf "\033[32;1;1m✓ \033[0m"

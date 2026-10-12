@@ -1,1 +1,1 @@
-bash <(echo 'ZmluZCAuIC1uYW1lICcqLnNoJyB8IHNlZCAicy8uKlwvLy8iIHwgc2VkICJzL1wuc2gvLyIK' | base64 -d)
+bash <(echo 'ZmluZCAuIC1uYW1lICcqLnNoJyB8IHNlZCAncy8uKlwvLy8nIHwgc2VkICdzL1wuc2gkLy8nCg==' | base64 -d)

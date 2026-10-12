@@ -19,12 +19,12 @@ fi
 
 if [ $TOTAL_SUCCESS == $TOTAL_TESTS ]; then
 	printf "\n\033[32;1;1m╭───────────────────────────────╮\n"
-	printf "│\033[0m %02d/%02d tests                   \033[32;1;1m│\n" $TOTAL_SUCCESS $TOTAL_TESTS
+	printf "│\033[0m %3d/%-3d tests                 \033[32;1;1m│\n" $TOTAL_SUCCESS $TOTAL_TESTS
 	printf "│\033[0m Everything is good for me! :) \033[32;1;1m│\n"
 	printf "╰───────────────────────────────╯\033[0m\n"
 else
 	printf "\n\033[31;1;1m╭───────────────────────────────╮\n"
-	printf "│\033[0m %02d/%02d tests                   \033[31;1;1m│\n" $TOTAL_SUCCESS $TOTAL_TESTS
+	printf "│\033[0m %3d/%-3d tests                 \033[31;1;1m│\n" $TOTAL_SUCCESS $TOTAL_TESTS
 	printf "│\033[0m Check outputs for details :(  \033[31;1;1m│\n"
 	printf "╰───────────────────────────────╯\033[0m\n"
 fi
